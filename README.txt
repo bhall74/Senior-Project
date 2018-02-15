@@ -1,5 +1,7 @@
 Maven instructions for Alexa Skill:
 
+cd into the project directory (adventure_creator_skill/)
+
 from the command line type: mvn install
 
 this will pull all of the dependencies you need to compile
