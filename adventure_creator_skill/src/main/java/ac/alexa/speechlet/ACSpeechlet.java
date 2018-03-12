@@ -15,14 +15,24 @@ import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
 import com.amazon.speech.ui.OutputSpeech;
+
+//Firebase
+//import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 /**
- * Hello world!
- *
+ * Adventure Creator Skill
+ *  Queries game data from Firebase and builds Intents
  */
 public class ACSpeechlet implements SpeechletV2
 {
   private static final Logger log = LoggerFactory.getLogger(ACSpeechlet.class);
-
+  private static final String[] events = { "Event one", "Event two", "Event three"};
+  private static final String[] descriptions = { "Description one", "Description two", "Description three" };
+  private static int counter = 0;
   @Override
   public void onSessionStarted(SpeechletRequestEnvelope<SessionStartedRequest> requestEnvelope) {
       log.info("onSessionStarted requestId={}, sessionId={}", requestEnvelope.getRequest().getRequestId(),
@@ -46,8 +56,27 @@ public class ACSpeechlet implements SpeechletV2
       Intent intent = request.getIntent();
       String intentName = (intent != null) ? intent.getName() : null;
 
-      // create intent logic here
-      return getWelcomeResponse();
+    if ("GameChoiceIntent".equals(intentName)) {
+          String eventStr = events[counter];
+          String descStr = descriptions[counter];
+          counter++;
+
+          String outputStr = eventStr + " " + descStr;
+          return getAskResponse("GameChoice", outputStr);
+    } else if ("AMAZON.HelpIntent".equals(intentName)) {
+          // Create the plain text output.
+          String helpStr = "Adventure Creator lets you choose you " +
+            "experience a choose your own adventure story, or " +
+            "design your own stories using the mobile app available for Android.";
+          return getAskResponse("AMAZON.HelpIntent", helpStr);
+      } else if ("AMAZON.StopIntent".equals(intentName)) {
+          return getAskResponse("AMAZON.StopIntent", "Goodbye");
+      } else if ("AMAZON.CancelIntent".equals(intentName)) {
+          return getAskResponse("AMAZON.CancelIntent", "Goodbye");
+      } else {
+          String outputStr = "Sorry, you mumble too much.";
+          return getAskResponse("Error", outputStr);
+      }
 
   }
 
@@ -64,8 +93,8 @@ public class ACSpeechlet implements SpeechletV2
    * @return SpeechletResponse spoken and visual response for the given intent
    */
   private SpeechletResponse getWelcomeResponse() {
-      String speechText = "Welcome to the Alexa Skills Kit, you can say hello";
-      return getWelcomeResponse();
+      String speechText = "Welcome to Adventure Creator. Do you want to play a game?";
+      return getAskResponse("Welcome", speechText);
   }
 
   /**

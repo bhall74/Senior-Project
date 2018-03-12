@@ -1,0 +1,22 @@
+{
+  "languageModel" : {
+    "intents" : [
+      {
+        "intent" : "GameChoiceIntent",
+        "samples" : ["{choice}"]
+      },
+      {
+        "intent" : "AMAZON.HelpIntent",
+        "samples" : ["help"]
+      },
+      {
+        "intent" : "AMAZON.CancelIntent",
+        "samples" : ["cancel"]
+      },
+      {
+        "intent" : "AMAZON.QuitIntent",
+        "samples" : ["quit"]
+      },
+    ]
+  }
+}

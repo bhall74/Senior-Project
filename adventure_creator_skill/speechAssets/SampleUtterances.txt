@@ -1,0 +1,7 @@
+GameChoiceIntent {choice}
+
+AMAZON.HelpIntent help
+
+AMAZON.CancelIntent cancel
+
+AMAZON.QuitIntent quit 
