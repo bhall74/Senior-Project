@@ -3,6 +3,7 @@ package ac.alexa.speechlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// Amazon Alexa imports
 import com.amazon.speech.slu.Intent;
 import com.amazon.speech.speechlet.IntentRequest;
 import com.amazon.speech.speechlet.LaunchRequest;
@@ -20,8 +21,22 @@ import com.amazon.speech.ui.OutputSpeech;
 //import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.FirebaseApp;
+import com.google.auth.oauth2.GoogleCredentials;
+
+//game object references
+import ac.game.ZAdventure;
+import ac.game.ZEvent;
+
+//other imports
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Adventure Creator Skill
@@ -29,15 +44,72 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class ACSpeechlet implements SpeechletV2
 {
-  private static final Logger log = LoggerFactory.getLogger(ACSpeechlet.class);
   private static final String[] events = { "Event one", "Event two", "Event three"};
   private static final String[] descriptions = { "Description one", "Description two", "Description three" };
-  private static int counter = 0;
+  private int counter = 0;
+
+  //object references
+  private static final Logger log = LoggerFactory.getLogger(ACSpeechlet.class);
+  //firebase references
+  private Query query;
+  private ValueEventListener acQueryListener;
+  private FirebaseOptions options;
+  private DatabaseReference acDatabase;
+  //other object references
+  private FileInputStream serviceAccount;
+  private ArrayList<ZAdventure> adventureList = new ArrayList<>();
+
+  public ACSpeechlet() {
+    counter = 0;
+    adventureList = new ArrayList<>();
+    try {
+      // Fetch the service account key JSON file contents
+      serviceAccount = new FileInputStream("ACServiceAccount.json");
+
+      // Initialize the app with a service account, granting admin privileges
+      options = new FirebaseOptions.Builder()
+          .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+          .setDatabaseUrl("https://alexa-adventure-creator-ca7c9.firebaseio.com/")
+          .build();
+      FirebaseApp.initializeApp(options);
+      // Initialize the firebase reference
+      acDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+    } catch (IOException ioe) {
+      System.out.println("Cannot find file");
+    }
+  }
+
+
   @Override
   public void onSessionStarted(SpeechletRequestEnvelope<SessionStartedRequest> requestEnvelope) {
       log.info("onSessionStarted requestId={}, sessionId={}", requestEnvelope.getRequest().getRequestId(),
               requestEnvelope.getSession().getSessionId());
+
       // any initialization logic goes here
+      // Test query
+      query = acDatabase.child("adventures");
+      acQueryListener = query.addValueEventListener(new ValueEventListener() {
+          @Override
+          public void onDataChange(DataSnapshot dataSnapshot) {
+            System.out.println("async call");
+            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                ZAdventure zAdventure = postSnapshot.getValue(ZAdventure.class);
+                adventureList.add(zAdventure);
+                System.out.println("added adventure");
+
+            }
+          }
+
+          @Override
+          public void onCancelled(DatabaseError databaseError) {
+              // Getting Post failed, log a message
+              System.out.println("something went wrong...database error");
+              // ...
+          }
+      });
+
   }
 
   @Override
@@ -57,12 +129,16 @@ public class ACSpeechlet implements SpeechletV2
       String intentName = (intent != null) ? intent.getName() : null;
 
     if ("GameChoiceIntent".equals(intentName)) {
-          String eventStr = events[counter];
-          String descStr = descriptions[counter];
-          counter++;
+      String outputStr;
+      if (adventureList.size() > 0) {
+        ZAdventure curAdventure = adventureList.get(counter);
+        outputStr = curAdventure.getName() + " " + curAdventure.getDescription();
+        counter =  (counter % adventureList.size()) + 1;
+      } else {
+        outputStr = "Waiting for data";
+      }
 
-          String outputStr = eventStr + " " + descStr;
-          return getAskResponse("GameChoice", outputStr);
+      return getAskResponse("GameChoice", outputStr);
     } else if ("AMAZON.HelpIntent".equals(intentName)) {
           // Create the plain text output.
           String helpStr = "Adventure Creator lets you choose you " +
@@ -148,5 +224,5 @@ public class ACSpeechlet implements SpeechletV2
       Reprompt reprompt = getReprompt(speech);
 
       return SpeechletResponse.newAskResponse(speech, reprompt, card);
-}
+    }
 }

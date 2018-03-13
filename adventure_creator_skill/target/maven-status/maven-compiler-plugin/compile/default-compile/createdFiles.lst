@@ -1,2 +1,5 @@
 ac/alexa/speechlet/ACSpeechlet.class
+ac/game/ZEvent.class
+ac/alexa/speechlet/ACSpeechlet$1.class
 ac/alexa/speechlet/ACSpeechletRequestStreamHandler.class
+ac/game/ZAdventure.class

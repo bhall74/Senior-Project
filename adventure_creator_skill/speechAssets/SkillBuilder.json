@@ -3,20 +3,26 @@
     "intents" : [
       {
         "intent" : "GameChoiceIntent",
-        "samples" : ["{choice}"]
+        "slots" : [
+          {
+            "name" : "choice",
+            "type" : "CHOICE"
+          }
+        ]
       },
       {
         "intent" : "AMAZON.HelpIntent",
-        "samples" : ["help"]
+        "samples" : []
       },
       {
         "intent" : "AMAZON.CancelIntent",
-        "samples" : ["cancel"]
+        "samples" : []
       },
       {
         "intent" : "AMAZON.QuitIntent",
-        "samples" : ["quit"]
-      },
-    ]
+        "samples" : []
+      }
+    ],
+    "invocationName" : "adventure creator"
   }
 }
