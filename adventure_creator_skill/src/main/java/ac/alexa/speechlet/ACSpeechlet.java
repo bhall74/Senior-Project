@@ -37,6 +37,8 @@ import ac.game.ZEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+
 
 /**
  * Adventure Creator Skill
@@ -58,6 +60,7 @@ public class ACSpeechlet implements SpeechletV2
   //other object references
   private FileInputStream serviceAccount;
   private ArrayList<ZAdventure> adventureList = new ArrayList<>();
+  private String testStr;
 
   public ACSpeechlet() {
     counter = 0;
@@ -73,7 +76,7 @@ public class ACSpeechlet implements SpeechletV2
           .build();
       FirebaseApp.initializeApp(options);
       // Initialize the firebase reference
-      acDatabase = FirebaseDatabase.getInstance().getReference();
+      acDatabase = FirebaseDatabase.getInstance().getReference("testForBryan");
 
 
     } catch (IOException ioe) {
@@ -89,26 +92,9 @@ public class ACSpeechlet implements SpeechletV2
 
       // any initialization logic goes here
       // Test query
-      query = acDatabase.child("adventures");
-      acQueryListener = query.addValueEventListener(new ValueEventListener() {
-          @Override
-          public void onDataChange(DataSnapshot dataSnapshot) {
-            System.out.println("async call");
-            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                ZAdventure zAdventure = postSnapshot.getValue(ZAdventure.class);
-                adventureList.add(zAdventure);
-                System.out.println("added adventure");
+      System.out.println("in onSessionStarted...");
 
-            }
-          }
 
-          @Override
-          public void onCancelled(DatabaseError databaseError) {
-              // Getting Post failed, log a message
-              System.out.println("something went wrong...database error");
-              // ...
-          }
-      });
 
   }
 
@@ -116,6 +102,41 @@ public class ACSpeechlet implements SpeechletV2
   public SpeechletResponse onLaunch(SpeechletRequestEnvelope<LaunchRequest> requestEnvelope) {
       log.info("onLaunch requestId={}, sessionId={}", requestEnvelope.getRequest().getRequestId(),
               requestEnvelope.getSession().getSessionId());
+      System.out.println("Starting adventure creator...");
+
+      //wait for firebase to return
+      try {
+        testStr = "test failed";
+        CountDownLatch latch = new CountDownLatch(1);
+        //query = acDatabase.child("adventures").orderByChild("userid");
+        System.out.println("attempting asycn query call in thread...");
+        acDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+          @Override
+          public void onDataChange(DataSnapshot dataSnapshot) {
+            System.out.println("async call");
+            testStr = dataSnapshot.getValue(String.class);
+            // for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+            //   ZAdventure zAdventure = postSnapshot.getValue(ZAdventure.class);
+            //   adventureList.add(zAdventure);
+            //   System.out.println("added adventure");
+            // }
+
+            latch.countDown();
+          }
+
+          @Override
+          public void onCancelled(DatabaseError databaseError) {
+              // Getting Post failed, log a message
+              System.out.println("something went wrong...database error");
+              // ...
+              latch.countDown();
+          }//end onCancelled
+        });//end value listener
+        latch.await();
+      } catch (InterruptedException ie) {
+        System.out.println("Interruption");
+      }
+
       return getWelcomeResponse();
   }
 
@@ -129,16 +150,16 @@ public class ACSpeechlet implements SpeechletV2
       String intentName = (intent != null) ? intent.getName() : null;
 
     if ("GameChoiceIntent".equals(intentName)) {
-      String outputStr;
-      if (adventureList.size() > 0) {
-        ZAdventure curAdventure = adventureList.get(counter);
-        outputStr = curAdventure.getName() + " " + curAdventure.getDescription();
-        counter =  (counter % adventureList.size()) + 1;
-      } else {
-        outputStr = "Waiting for data";
-      }
+      // String outputStr;
+      // if (adventureList.size() > 0) {
+      //   ZAdventure curAdventure = adventureList.get(counter);
+      //   outputStr = curAdventure.getName() + " " + curAdventure.getDescription();
+      //   counter =  (counter % adventureList.size()) + 1;
+      // } else {
+      //   outputStr = "Waiting for data";
+      // }
 
-      return getAskResponse("GameChoice", outputStr);
+      return getAskResponse("GameChoice", testStr);
     } else if ("AMAZON.HelpIntent".equals(intentName)) {
           // Create the plain text output.
           String helpStr = "Adventure Creator lets you choose you " +
