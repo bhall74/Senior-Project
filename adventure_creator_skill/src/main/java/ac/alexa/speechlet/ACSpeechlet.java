@@ -38,6 +38,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
 
 
 /**
@@ -61,6 +63,7 @@ public class ACSpeechlet implements SpeechletV2
   private FileInputStream serviceAccount;
   private ArrayList<ZAdventure> adventureList = new ArrayList<>();
   private String testStr;
+  private Object dataObj;
 
   public ACSpeechlet() {
     counter = 0;
@@ -76,7 +79,7 @@ public class ACSpeechlet implements SpeechletV2
           .build();
       FirebaseApp.initializeApp(options);
       // Initialize the firebase reference
-      acDatabase = FirebaseDatabase.getInstance().getReference("testForBryan");
+      acDatabase = FirebaseDatabase.getInstance().getReference("adventures/-L7KP7ZFWe9DZbLuKVrd/adventureDescription");
 
 
     } catch (IOException ioe) {
@@ -114,13 +117,10 @@ public class ACSpeechlet implements SpeechletV2
           @Override
           public void onDataChange(DataSnapshot dataSnapshot) {
             System.out.println("async call");
+            // dataObj = dataSnapshot.getValue();
+            // System.out.println(dataObj);
             testStr = dataSnapshot.getValue(String.class);
-            // for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-            //   ZAdventure zAdventure = postSnapshot.getValue(ZAdventure.class);
-            //   adventureList.add(zAdventure);
-            //   System.out.println("added adventure");
-            // }
-
+            System.out.println(testStr);
             latch.countDown();
           }
 
@@ -150,14 +150,15 @@ public class ACSpeechlet implements SpeechletV2
       String intentName = (intent != null) ? intent.getName() : null;
 
     if ("GameChoiceIntent".equals(intentName)) {
-      // String outputStr;
-      // if (adventureList.size() > 0) {
-      //   ZAdventure curAdventure = adventureList.get(counter);
-      //   outputStr = curAdventure.getName() + " " + curAdventure.getDescription();
-      //   counter =  (counter % adventureList.size()) + 1;
-      // } else {
-      //   outputStr = "Waiting for data";
-      // }
+
+        // try {
+        //   Object testObj = new JSONParser().parse((String)dataObj);
+        //   JSONObject jsonObj = (JSONObject)testObj;
+        //   testStr = (String)jsonObj.get("adventureDescription");
+        //   System.out.println(testStr);
+        // } catch (ParseException pe) {
+        //
+        // }
 
       return getAskResponse("GameChoice", testStr);
     } else if ("AMAZON.HelpIntent".equals(intentName)) {
