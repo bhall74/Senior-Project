@@ -96,9 +96,6 @@ public class ACSpeechlet implements SpeechletV2
       // any initialization logic goes here
       // Test query
       System.out.println("in onSessionStarted...");
-
-
-
   }
 
   @Override
@@ -142,12 +139,13 @@ public class ACSpeechlet implements SpeechletV2
 
   @Override
   public SpeechletResponse onIntent(SpeechletRequestEnvelope<IntentRequest> requestEnvelope) {
-      IntentRequest request = requestEnvelope.getRequest();
-      log.info("onIntent requestId={}, sessionId={}", request.getRequestId(),
-              requestEnvelope.getSession().getSessionId());
+    IntentRequest request = requestEnvelope.getRequest();
+    log.info("onIntent requestId={}, sessionId={}", request.getRequestId(),
+            requestEnvelope.getSession().getSessionId());
 
-      Intent intent = request.getIntent();
-      String intentName = (intent != null) ? intent.getName() : null;
+    System.out.println("in onIntent");
+    Intent intent = request.getIntent();
+    String intentName = (intent != null) ? intent.getName() : null;
 
     if ("GameChoiceIntent".equals(intentName)) {
 
@@ -180,9 +178,10 @@ public class ACSpeechlet implements SpeechletV2
 
   @Override
   public void onSessionEnded(SpeechletRequestEnvelope<SessionEndedRequest> requestEnvelope) {
-      log.info("onSessionEnded requestId={}, sessionId={}", requestEnvelope.getRequest().getRequestId(),
-              requestEnvelope.getSession().getSessionId());
-      // any cleanup logic goes here
+    log.info("onSessionEnded requestId={}, sessionId={}", requestEnvelope.getRequest().getRequestId(),
+            requestEnvelope.getSession().getSessionId());
+    // any cleanup logic goes here
+    System.out.println("in onSessionEnded");
   }
 
   /**
@@ -191,8 +190,8 @@ public class ACSpeechlet implements SpeechletV2
    * @return SpeechletResponse spoken and visual response for the given intent
    */
   private SpeechletResponse getWelcomeResponse() {
-      String speechText = "Welcome to Adventure Creator. Do you want to play a game?";
-      return getAskResponse("Welcome", speechText);
+    String speechText = "Welcome to Adventure Creator. Do you want to play a game?";
+    return getAskResponse("Welcome", speechText);
   }
 
   /**
@@ -202,11 +201,11 @@ public class ACSpeechlet implements SpeechletV2
    * @return SimpleCard the display card to be sent along with the voice response.
    */
   private SimpleCard getSimpleCard(String title, String content) {
-      SimpleCard card = new SimpleCard();
-      card.setTitle(title);
-      card.setContent(content);
+    SimpleCard card = new SimpleCard();
+    card.setTitle(title);
+    card.setContent(content);
 
-      return card;
+    return card;
   }
 
   /**
@@ -215,10 +214,10 @@ public class ACSpeechlet implements SpeechletV2
    * @return an instance of SpeechOutput.
    */
   private PlainTextOutputSpeech getPlainTextOutputSpeech(String speechText) {
-      PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-      speech.setText(speechText);
+    PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+    speech.setText(speechText);
 
-      return speech;
+    return speech;
   }
 
   /**
@@ -228,10 +227,10 @@ public class ACSpeechlet implements SpeechletV2
    * @return Reprompt instance.
    */
   private Reprompt getReprompt(OutputSpeech outputSpeech) {
-      Reprompt reprompt = new Reprompt();
-      reprompt.setOutputSpeech(outputSpeech);
+    Reprompt reprompt = new Reprompt();
+    reprompt.setOutputSpeech(outputSpeech);
 
-      return reprompt;
+    return reprompt;
   }
 
   /**
@@ -241,10 +240,10 @@ public class ACSpeechlet implements SpeechletV2
    * @return the resulting card and speech text.
    */
   private SpeechletResponse getAskResponse(String cardTitle, String speechText) {
-      SimpleCard card = getSimpleCard(cardTitle, speechText);
-      PlainTextOutputSpeech speech = getPlainTextOutputSpeech(speechText);
-      Reprompt reprompt = getReprompt(speech);
+    SimpleCard card = getSimpleCard(cardTitle, speechText);
+    PlainTextOutputSpeech speech = getPlainTextOutputSpeech(speechText);
+    Reprompt reprompt = getReprompt(speech);
 
-      return SpeechletResponse.newAskResponse(speech, reprompt, card);
-    }
+    return SpeechletResponse.newAskResponse(speech, reprompt, card);
+  }
 }
