@@ -1,0 +1,200 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "adventure skill",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "RestartGame",
+                    "slots": [],
+                    "samples": [
+                        "play from beginning",
+                        "restart this game",
+                        "restart"
+                    ]
+                },
+                {
+                    "name": "StartAdventure",
+                    "slots": [
+                        {
+                            "name": "GameNames",
+                            "type": "GameNumbers"
+                        }
+                    ],
+                    "samples": [
+                        "Start the {GameNames} adventure",
+                        "Start the {GameNames} game"
+                    ]
+                },
+                {
+                    "name": "ChoosingEventChoices",
+                    "slots": [
+                        {
+                            "name": "Game_Choices",
+                            "type": "GameChoiceNumbers"
+                        }
+                    ],
+                    "samples": [
+                        "Do the {Game_Choices} choice",
+                        "Game Choice {Game_Choices}",
+                        "Lets do {Game_Choices}",
+                        "I would like to do {Game_Choices}"
+                    ]
+                },
+                {
+                    "name": "Get_Description",
+                    "slots": [],
+                    "samples": [
+                        "read the description",
+                        "whats going on in here",
+                        "What does the room look like",
+                        "reread the description"
+                    ]
+                },
+                {
+                    "name": "Get_Event_Choices",
+                    "slots": [],
+                    "samples": [
+                        "read out my choices",
+                        "reread my choices",
+                        "my choices",
+                        "Whar are the things I can do here",
+                        "Wait what can I do",
+                        "What can I do in this room",
+                        "What are my choices"
+                    ]
+                },
+                {
+                    "name": "Get_Inventory",
+                    "slots": [],
+                    "samples": [
+                        "inventory read out",
+                        "whats in my bag",
+                        "what do I have",
+                        "what am I carrying",
+                        "Whats in my inventory"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "GameNumbers",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Game three"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Game two"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Game one"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "GameChoiceNumbers",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "game choice five"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "game choice four"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "game choice three"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "game choice two"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "game choice one"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "five"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "four"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "three"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "two"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "one"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "ChoosingEventChoices",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.1186352722717"
+                    },
+                    "slots": [
+                        {
+                            "name": "Game_Choices",
+                            "type": "GameChoiceNumbers",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Confirm.Intent.1186352722717",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Is that choice okay?"
+                    }
+                ]
+            }
+        ]
+    }
+}
