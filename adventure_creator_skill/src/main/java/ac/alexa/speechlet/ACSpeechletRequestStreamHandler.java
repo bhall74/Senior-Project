@@ -24,7 +24,7 @@ public class ACSpeechletRequestStreamHandler extends SpeechletRequestStreamHandl
          * Alexa Skill and put the relevant Application Ids in this Set.
          */
         supportedApplicationIds = new HashSet<String>();
-        supportedApplicationIds.add("amzn1.ask.skill.ef4f34ed-5a7a-48fb-8df4-a7c67f8097ef");
+        //supportedApplicationIds.add("add an id here...");
     }
 
     public ACSpeechletRequestStreamHandler() {
