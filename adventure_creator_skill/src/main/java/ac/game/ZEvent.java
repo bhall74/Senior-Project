@@ -3,7 +3,6 @@ package ac.game;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by siatk on 3/6/2018.
@@ -14,20 +13,45 @@ import java.util.List;
 
 public class ZEvent {
 
-    int eventId;                //1, 2, 3, 4.     0 = starting node.
+    public int eventId;                //1, 2, 3, 4.     0 = starting node.
     //String ZEventKey;           //for convenience - the entry Key in Firebase
 
-    String title;           //optional event title
+    public String title;           //optional event title
 
-    String description;
-    int eventType = 0;          //default, basic ZEvent
+    public String description;
+    public int eventType = 0;          //default, basic ZEvent
 
-    String prevEventKey;          //to go back in the game
+    public String prevEventKey;          //to go back in the game
 
-    List<Integer> prevEventIds;     //which Nodes call this node?  when a node gets deleted, we also need to remove references to it from calling nodes.
+    public ArrayList<Integer> prevEventIds;     //which Nodes call this node?  when a node gets deleted, we also need to remove references to it from calling nodes.
 
-    List<String> nextActions;         //e.g. "go left", "go right", "go center"
-    List<Integer> nextEventIds;    //e.g. leftNode, rightNode, centerNode
+    public ArrayList<String> nextActions;         //e.g. "go left", "go right", "go center"
+    public ArrayList<Integer> nextEventIds;    //e.g. leftNode, rightNode, centerNode
+
+
+
+    public ArrayList<Integer> getPrevEventIds() {
+        return prevEventIds;
+    }
+    public void setPrevEventIds(ArrayList<Integer> prevEventIds) {
+        this.prevEventIds = prevEventIds;
+    }
+
+    public ArrayList<String> getNextActions() {
+        return nextActions;
+    }
+    public void setNextActions(ArrayList<String> nextActions) {
+        this.nextActions = nextActions;
+    }
+
+    public ArrayList<Integer> getNextEventIds() {
+        return nextEventIds;
+    }
+    public void setNextEventIds(ArrayList<Integer> nextEventIds) {
+        this.nextEventIds = nextEventIds;
+    }
+
+
 
 
     //int level = 0;    // level only makes sense in the context of TreeAdventure -
