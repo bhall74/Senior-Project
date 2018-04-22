@@ -14,19 +14,23 @@ public class ZAdventure {
     public String adventureKey; //for convenience - the String under which it is stored in Firebase
     public String adventureName;
     public String adventureDescription;
-    public long dateModified;    //long currDate = System.currentTimeMillis();     //use mDate = Date(currDate) to get it back.
+    public long dateCreated;    //long currDate = System.currentTimeMillis();     //use mDate = Date(currDate) to get it back.
     public int adventureType;
 
     public int eventCounter = 0;
 
+    //fighty adventure fields
+    public int playerHealth;
+    public String weaponName;
+    public int minDamage;
+    public int maxDamage;
+
 
     public ArrayList<ZEvent> events;
-
 
     public ArrayList<ZEvent> getEvents() {
         return events;
     }
-
     public void setEvents(ArrayList<ZEvent> events) {
         this.events = events;
     }
@@ -41,9 +45,8 @@ public class ZAdventure {
         this.adventureKey = adventureKey;
         this.adventureName = adventureName;
         this.adventureDescription = adventureDescription;
-        this.dateModified = System.currentTimeMillis();
+        this.dateCreated = System.currentTimeMillis();
         this.adventureType = adventureType;
-
         events = new ArrayList<>();
     }
 

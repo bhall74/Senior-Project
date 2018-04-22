@@ -1,5 +1,8 @@
 ac/alexa/speechlet/ACSpeechlet.class
+ac/game/ZAdventure.class
+ac/alexa/speechlet/ACSpeechlet$2.class
 ac/game/ZEvent.class
 ac/alexa/speechlet/ACSpeechlet$1.class
 ac/alexa/speechlet/LambdaFunctionHandler.class
-ac/game/ZAdventure.class
+ac/game/ZLinkRequest.class
+ac/alexa/speechlet/ACSpeechlet$3.class
